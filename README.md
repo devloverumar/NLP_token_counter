@@ -4,5 +4,6 @@
 - You can provide any text file having english text.
 - Here is the command with complete list of args to run the solution
 ```bash
-python Assignment01_NLP.py text_file.txt --lower --stopwords --sort --stem 
+python Assignment01_NLP.py text_file.txt --lower --stopwords --sort --stem --summary
 ```
+For more details, see the attached PDF Report

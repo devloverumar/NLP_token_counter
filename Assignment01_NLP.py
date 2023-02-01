@@ -1,6 +1,8 @@
 import argparse
 import string
 import re
+import heapq
+
 
 parser = argparse.ArgumentParser(description='Data Normalization Script')
 
@@ -19,6 +21,9 @@ parser.add_argument('--stopwords', action='store_true',
 
 parser.add_argument('--sort', action='store_true',
                     help='To sort vocabulary')
+
+parser.add_argument('--summary', action='store_true',
+                    help='To summarize the text')
 
 
 args = parser.parse_args()
@@ -71,12 +76,29 @@ try:
             vocab_dict[word] +=1
         
         if args.sort:
-            vocab_dict=sorted(vocab_dict.items(), key=lambda x:x[1],reverse=True)
-        print(vocab_dict)
+            sorted_vocab=sorted(vocab_dict.items(), key=lambda x:x[1],reverse=True)
+            print(sorted_vocab)
+        else:
+            print(vocab_dict)   # if sorting arg not passed, still print the final vocab
 
-        print('File reading successful')
-        # print(vocab)
-        # print(vocab_dict)
+        if args.summary:
+            sent2score = {}
+            for sentence in sentences:
+                for word in  sentence.split():
+                    if word in vocab_dict.keys():
+                        if len(sentence.split(' ')) < 28 and len(sentence.split(' ')) > 9:
+                            if sentence not in sent2score.keys():
+                                sent2score[sentence] = vocab_dict[word]
+                            else:
+                                sent2score[sentence] += vocab_dict[word]
+
+            for key in vocab_dict.keys():
+                vocab_dict[key] = vocab_dict[key] / max(vocab_dict.values())
+
+            best_three_sentences = heapq.nlargest(5, sent2score, key=sent2score.get)
+            print(*best_three_sentences)
+
+        print('Code executed successfully')
             
 
 except IOError as e:
