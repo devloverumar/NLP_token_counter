@@ -52,15 +52,14 @@ try:
             if args.stem:
                 words = [
                         # next line finds patterns and remove them from the string.
-                        re.sub(r'less|ship|ing|les|ful|ly|es|s', '', word) 
+                        re.sub(r'less|ship|ing|les|ful|ly|es|s', '', word)
                         for word in words
                     ]
  
-            punctuations=[string.punctuation]
-            if args.stopwords:
-                punctuations.append(stop_words)
             words = [word.translate(str.maketrans('', '', string.punctuation)) for word in words]
             words = [word for word in words if word]
+            if args.stopwords:
+                words = [word for word in words if word not in stop_words]
             # print(words)
             all_words.extend(words)
             for word in words:
